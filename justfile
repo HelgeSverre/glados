@@ -80,3 +80,53 @@ docker-down:
 [group('docker')]
 docker-logs:
     docker compose logs -f
+
+# === Voice Generator ===
+
+# Setup voice generator (install Bun dependencies)
+[group('voice')]
+voice-setup:
+    cd voice-generator && bun install
+    mkdir -p voice-generator/data
+    mkdir -p voice-generator/public/audio
+
+# Start voice generator web server
+[group('voice')]
+voice-serve:
+    cd voice-generator && bun run start
+
+# Start voice generator web server (development mode with hot reload)
+[group('voice')]
+voice-dev:
+    cd voice-generator && bun run dev
+
+# Start voice generator TTS worker
+[group('voice')]
+voice-worker:
+    uv run python voice-generator/worker/processor.py
+
+# Start both voice generator services (web + worker)
+[group('voice')]
+voice-start:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    echo "Starting Voice Generator..."
+    echo "Web server: http://localhost:3000"
+
+    # Start worker in background
+    uv run python voice-generator/worker/processor.py &
+    WORKER_PID=$!
+
+    # Trap to kill worker on exit
+    trap "kill $WORKER_PID 2>/dev/null" EXIT
+
+    # Start web server (foreground)
+    cd voice-generator && bun run start
+
+# Clean voice generator audio files and database
+[group('voice')]
+voice-clean:
+    rm -f voice-generator/public/audio/*.wav
+    rm -f voice-generator/data/glados-voice.db
+    rm -f voice-generator/data/glados-voice.db-wal
+    rm -f voice-generator/data/glados-voice.db-shm
