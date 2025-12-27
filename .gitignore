@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+.env
+venv/
+.venv/
+
+# macOS
+.DS_Store
+
+# Models (large files - download separately)
+models/
+models.zip
+
+# Generated audio output
+*.wav
+
+# IDE
+.idea/
+.vscode/
+*.swp
