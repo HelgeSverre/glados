@@ -29,6 +29,9 @@ This project is a modified fork of [R2D2FISH/glados-tts](https://github.com/R2D2
 ## Quick Start
 
 ```bash
+git clone https://github.com/HelgeSverre/glados.git
+cd glados
+
 # Install dependencies and download models
 just setup
 
