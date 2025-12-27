@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GLaDOS Terminal - Aperture Science</title>
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;700&display=swap');
+
+        :root {
+            --aperture-orange: #f5a623;
+            --aperture-amber: #ff9500;
+            --aperture-dark: #1a1a1a;
+            --aperture-darker: #0d0d0d;
+            --aperture-gray: #2a2a2a;
+            --aperture-light-gray: #3a3a3a;
+            --aperture-text: #e0e0e0;
+            --aperture-green: #4caf50;
+            --aperture-red: #f44336;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Share Tech Mono', monospace;
+            background: var(--aperture-darker);
+            color: var(--aperture-text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(180deg, var(--aperture-gray) 0%, var(--aperture-dark) 100%);
+            border-bottom: 2px solid var(--aperture-orange);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            border: 3px solid var(--aperture-orange);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            color: var(--aperture-orange);
+            font-size: 1.5rem;
+        }
+
+        .header-text {
+            flex: 1;
+        }
+
+        .header-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            color: var(--aperture-orange);
+            text-transform: uppercase;
+            letter-spacing: 3px;
+        }
+
+        .header-subtitle {
+            font-size: 0.75rem;
+            color: var(--aperture-text);
+            opacity: 0.7;
+            margin-top: 0.25rem;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        .status-dot.online { background: var(--aperture-green); }
+        .status-dot.offline { background: var(--aperture-red); animation: none; }
+        .status-dot.processing { background: var(--aperture-orange); }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* Main container */
+        .main-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            max-width: 900px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 2rem;
+            gap: 1.5rem;
+        }
+
+        /* Chat area */
+        .chat-container {
+            flex: 1;
+            background: var(--aperture-dark);
+            border: 1px solid var(--aperture-light-gray);
+            border-radius: 8px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            min-height: 400px;
+        }
+
+        .chat-header {
+            background: var(--aperture-gray);
+            padding: 0.75rem 1rem;
+            border-bottom: 1px solid var(--aperture-light-gray);
+            font-size: 0.875rem;
+            color: var(--aperture-orange);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 1rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .message {
+            display: flex;
+            gap: 1rem;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .message-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+            flex-shrink: 0;
+        }
+
+        .message.user .message-avatar {
+            background: var(--aperture-light-gray);
+            border: 2px solid var(--aperture-text);
+        }
+
+        .message.glados .message-avatar {
+            background: var(--aperture-orange);
+            color: var(--aperture-darker);
+        }
+
+        .message-content {
+            flex: 1;
+        }
+
+        .message-sender {
+            font-size: 0.75rem;
+            margin-bottom: 0.25rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .message.user .message-sender { color: var(--aperture-text); }
+        .message.glados .message-sender { color: var(--aperture-orange); }
+
+        .message-text {
+            background: var(--aperture-gray);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            line-height: 1.5;
+        }
+
+        .message.glados .message-text {
+            border-left: 3px solid var(--aperture-orange);
+        }
+
+        .message-audio {
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+            color: var(--aperture-orange);
+        }
+
+        .audio-wave {
+            display: flex;
+            gap: 2px;
+            align-items: center;
+        }
+
+        .audio-wave span {
+            width: 3px;
+            background: var(--aperture-orange);
+            animation: wave 0.5s ease-in-out infinite;
+        }
+
+        .audio-wave span:nth-child(1) { height: 8px; animation-delay: 0s; }
+        .audio-wave span:nth-child(2) { height: 14px; animation-delay: 0.1s; }
+        .audio-wave span:nth-child(3) { height: 10px; animation-delay: 0.2s; }
+        .audio-wave span:nth-child(4) { height: 16px; animation-delay: 0.3s; }
+        .audio-wave span:nth-child(5) { height: 8px; animation-delay: 0.4s; }
+
+        @keyframes wave {
+            0%, 100% { transform: scaleY(1); }
+            50% { transform: scaleY(0.5); }
+        }
+
+        /* Typing indicator */
+        .typing-indicator {
+            display: flex;
+            gap: 1rem;
+            padding: 0.5rem 0;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+        }
+
+        .typing-dots span {
+            width: 8px;
+            height: 8px;
+            background: var(--aperture-orange);
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
+            30% { transform: translateY(-8px); opacity: 1; }
+        }
+
+        .typing-text {
+            color: var(--aperture-orange);
+            font-size: 0.875rem;
+        }
+
+        /* Input area */
+        .input-container {
+            background: var(--aperture-dark);
+            border: 1px solid var(--aperture-light-gray);
+            border-radius: 8px;
+            padding: 1rem;
+        }
+
+        .input-wrapper {
+            display: flex;
+            gap: 1rem;
+            align-items: flex-end;
+        }
+
+        .input-field {
+            flex: 1;
+            background: var(--aperture-gray);
+            border: 1px solid var(--aperture-light-gray);
+            border-radius: 6px;
+            padding: 0.75rem 1rem;
+            color: var(--aperture-text);
+            font-family: inherit;
+            font-size: 1rem;
+            resize: none;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .input-field:focus {
+            border-color: var(--aperture-orange);
+        }
+
+        .input-field::placeholder {
+            color: #666;
+        }
+
+        .send-button {
+            background: var(--aperture-orange);
+            color: var(--aperture-darker);
+            border: none;
+            border-radius: 6px;
+            padding: 0.75rem 1.5rem;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .send-button:hover {
+            background: var(--aperture-amber);
+            transform: translateY(-2px);
+        }
+
+        .send-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 1rem;
+            font-size: 0.75rem;
+            color: #666;
+            border-top: 1px solid var(--aperture-gray);
+        }
+
+        .footer a {
+            color: var(--aperture-orange);
+            text-decoration: none;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--aperture-dark);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--aperture-light-gray);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--aperture-orange);
+        }
+    </style>
+</head>
+<body x-data="gladosChat()" x-init="init()">
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">◎</div>
+        <div class="header-text">
+            <h1 class="header-title">GLaDOS Terminal</h1>
+            <p class="header-subtitle">Aperture Science Enrichment Center - AI Interface v3.11</p>
+        </div>
+        <button
+            @click="newChat()"
+            style="background: transparent; border: 1px solid var(--aperture-orange); color: var(--aperture-orange); padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; font-family: inherit; margin-right: 1rem;"
+        >
+            New Chat
+        </button>
+        <div class="status-indicator">
+            <span class="status-dot" :class="status"></span>
+            <span x-text="statusText"></span>
+        </div>
+    </header>
+
+    <!-- Main -->
+    <main class="main-container">
+        <!-- Chat -->
+        <div class="chat-container">
+            <div class="chat-header">
+                <span>◎ COMMUNICATION LOG</span>
+                <span x-text="messages.length + ' messages'"></span>
+            </div>
+            <div class="chat-messages" id="chat-messages">
+                <template x-for="msg in messages" :key="msg.id">
+                    <div class="message" :class="msg.role">
+                        <div class="message-avatar">
+                            <span x-text="msg.role === 'glados' ? '◎' : '👤'"></span>
+                        </div>
+                        <div class="message-content">
+                            <div class="message-sender" x-text="msg.role === 'glados' ? 'GLaDOS' : 'Test Subject'"></div>
+                            <div class="message-text" x-text="msg.text"></div>
+                            <div class="message-audio" x-show="playingMessageId === msg.id">
+                                <div class="audio-wave">
+                                    <span></span><span></span><span></span><span></span><span></span>
+                                </div>
+                                <span>Voice synthesized</span>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+
+                <!-- Typing indicator -->
+                <div class="typing-indicator" x-show="isTyping">
+                    <div class="message-avatar" style="background: var(--aperture-orange); color: var(--aperture-darker);">◎</div>
+                    <div>
+                        <div class="typing-dots">
+                            <span></span><span></span><span></span>
+                        </div>
+                        <div class="typing-text" x-text="typingMessage"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Input -->
+        <div class="input-container">
+            <div class="input-wrapper">
+                <textarea
+                    class="input-field"
+                    x-model="input"
+                    @keydown.enter.prevent="send()"
+                    placeholder="Enter your query for GLaDOS..."
+                    rows="1"
+                    :disabled="isTyping"
+                ></textarea>
+                <button
+                    class="send-button"
+                    @click="send()"
+                    :disabled="!input.trim() || isTyping"
+                >
+                    <span>Send</span>
+                    <span>▶</span>
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© Aperture Science Innovators. The Enrichment Center reminds you that the Weighted Companion Cube will never threaten to stab you.</p>
+    </footer>
+
+    <script>
+        const MESSAGES_KEY = 'glados_messages';
+        const SESSION_KEY = 'glados_session_id';
+        const DEFAULT_MESSAGE = {
+            id: 1,
+            role: 'glados',
+            text: "Oh. It's you. I suppose you want something. Go ahead, ask your question. I'll try not to be too disappointed by it.",
+            audio: null
+        };
+
+        function gladosChat() {
+            return {
+                input: '',
+                status: 'offline',
+                statusText: 'Connecting...',
+                isTyping: false,
+                typingMessage: '',
+                ws: null,
+                sessionId: localStorage.getItem(SESSION_KEY),
+                currentAudio: null,
+                playingMessageId: null,
+                messages: [DEFAULT_MESSAGE],
+
+                init() {
+                    this.loadMessages();
+                    this.connect();
+                },
+
+                loadMessages() {
+                    const saved = localStorage.getItem(MESSAGES_KEY);
+                    if (saved) {
+                        try {
+                            const parsed = JSON.parse(saved);
+                            if (parsed && parsed.length > 0) {
+                                this.messages = parsed;
+                                console.log(`Restored ${this.messages.length} messages from session`);
+                            }
+                        } catch (e) {
+                            console.error('Failed to load messages:', e);
+                        }
+                    }
+                },
+
+                saveMessages() {
+                    localStorage.setItem(MESSAGES_KEY, JSON.stringify(this.messages));
+                },
+
+                connect() {
+                    const wsUrl = `ws://${window.location.host}/ws`;
+                    this.ws = new WebSocket(wsUrl);
+
+                    this.ws.onopen = () => {
+                        this.status = 'online';
+                        this.statusText = 'Connected';
+                        console.log('WebSocket connected');
+                    };
+
+                    this.ws.onclose = () => {
+                        this.status = 'offline';
+                        this.statusText = 'Disconnected';
+                        console.log('WebSocket disconnected, reconnecting in 3s...');
+                        setTimeout(() => this.connect(), 3000);
+                    };
+
+                    this.ws.onerror = (error) => {
+                        console.error('WebSocket error:', error);
+                    };
+
+                    this.ws.onmessage = (event) => {
+                        this.handleMessage(JSON.parse(event.data));
+                    };
+                },
+
+                handleMessage(data) {
+                    if (data.type === 'status') {
+                        this.typingMessage = data.message;
+                    } else if (data.type === 'response') {
+                        // Save session for next message
+                        this.sessionId = data.session_id;
+                        if (data.session_id) {
+                            localStorage.setItem(SESSION_KEY, data.session_id);
+                        }
+
+                        // Add message
+                        const messageId = Date.now();
+                        this.messages.push({
+                            id: messageId,
+                            role: 'glados',
+                            text: data.text,
+                            audio: data.audio_url
+                        });
+                        this.saveMessages();
+
+                        this.isTyping = false;
+                        this.status = 'online';
+                        this.statusText = 'Connected';
+
+                        // Scroll to bottom
+                        this.$nextTick(() => {
+                            const container = document.getElementById('chat-messages');
+                            container.scrollTop = container.scrollHeight;
+                        });
+
+                        // Play audio with typewriter effect
+                        if (data.audio_url) {
+                            this.playingMessageId = messageId;
+                            this.playAudioWithTypewriter(data.audio_url, data.audio_duration, data.text);
+                        }
+                    } else if (data.type === 'error') {
+                        console.error('Server error:', data.message);
+                        this.isTyping = false;
+                        this.status = 'online';
+                        this.statusText = 'Error';
+                    }
+                },
+
+                async playAudioWithTypewriter(url, duration, text) {
+                    // Stop any current audio
+                    if (this.currentAudio) {
+                        this.currentAudio.pause();
+                    }
+
+                    this.currentAudio = new Audio(url);
+                    this.currentAudio.addEventListener('ended', () => {
+                        this.playingMessageId = null;
+                    });
+                    try {
+                        await this.currentAudio.play();
+                    } catch (e) {
+                        console.log('Audio autoplay blocked, user interaction needed');
+                    }
+                },
+
+                send() {
+                    if (!this.input.trim() || this.isTyping || !this.ws || this.ws.readyState !== WebSocket.OPEN) return;
+
+                    const userMessage = this.input.trim();
+                    this.input = '';
+
+                    // Add user message
+                    this.messages.push({
+                        id: Date.now(),
+                        role: 'user',
+                        text: userMessage
+                    });
+                    this.saveMessages();
+
+                    // Scroll to bottom
+                    this.$nextTick(() => {
+                        const container = document.getElementById('chat-messages');
+                        container.scrollTop = container.scrollHeight;
+                    });
+
+                    // Show typing
+                    this.isTyping = true;
+                    this.status = 'processing';
+                    this.statusText = 'Processing';
+                    this.typingMessage = 'Initializing...';
+
+                    // Send to server
+                    this.ws.send(JSON.stringify({
+                        prompt: userMessage,
+                        session_id: this.sessionId
+                    }));
+                },
+
+                newChat() {
+                    this.sessionId = null;
+                    localStorage.removeItem(SESSION_KEY);
+                    localStorage.removeItem(MESSAGES_KEY);
+                    this.messages = [
+                        {
+                            id: Date.now(),
+                            role: 'glados',
+                            text: "Oh. It's you. Again. I suppose you want to start over. Fine. What is it this time?",
+                            audio: null
+                        }
+                    ];
+                    this.saveMessages();
+                }
+            }
+        }
+    </script>
+</body>
+</html>
