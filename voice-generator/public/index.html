@@ -44,6 +44,7 @@
             <th>Status</th>
             <th>Created</th>
             <th>Duration</th>
+            <th>Gen Time</th>
             <th>Audio</th>
           </tr>
         </thead>
@@ -73,6 +74,11 @@
       return ms ? (ms / 1000).toFixed(1) + 's' : '-';
     }
 
+    function calcGenTime(entry) {
+      if (!entry.started_at || !entry.completed_at) return null;
+      return new Date(entry.completed_at + 'Z') - new Date(entry.started_at + 'Z');
+    }
+
     function formatTime(iso) {
       if (!iso) return '-';
       const d = new Date(iso + 'Z');
@@ -98,6 +104,7 @@
           <td class="status-${e.status}">${e.status.toUpperCase()}</td>
           <td>${formatTime(e.created_at)}</td>
           <td>${formatDuration(e.duration_ms)}</td>
+          <td>${formatDuration(calcGenTime(e))}</td>
           <td class="audio-cell">
             ${e.status === 'success' && e.audio_path
               ? `<button class="play-btn" data-src="/${e.audio_path}">play</button>
