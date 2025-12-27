@@ -25,6 +25,7 @@ This project is a modified fork of [R2D2FISH/glados-tts](https://github.com/R2D2
 - **[uv](https://github.com/astral-sh/uv)** - Fast Python package manager
 - **[just](https://github.com/casey/just)** - Command runner
 - **[Claude Code](https://github.com/anthropics/claude-code)** - Required for AI conversation mode (optional)
+- **[Docker](https://www.docker.com/)** - For containerized deployment (optional)
 
 ## Quick Start
 
@@ -39,7 +40,7 @@ just setup
 just serve
 ```
 
-Then open http://localhost:5000 in your browser.
+Then open http://localhost:8765 in your browser.
 
 ## Commands
 
@@ -52,6 +53,36 @@ Then open http://localhost:5000 in your browser.
 | `just say "text"` | Say something in GLaDOS's voice |
 | `just speak "text"` | Have GLaDOS respond to you (AI mode with Claude) |
 | `just clean` | Clean up generated audio files |
+| `just docker-build` | Build Docker image |
+| `just docker-up` | Start Docker container |
+| `just docker-up-detached` | Start Docker container in background |
+| `just docker-down` | Stop Docker container |
+| `just docker-logs` | View Docker logs |
+
+## Docker
+
+Run GLaDOS in a Docker container:
+
+```bash
+# Build and start
+just docker-build
+just docker-up
+
+# Or in one command with docker compose
+docker compose up --build
+```
+
+Then open http://localhost:8765 in your browser.
+
+To run in background:
+
+```bash
+just docker-up-detached
+just docker-logs  # view logs
+just docker-down  # stop
+```
+
+**Note:** AI conversation mode requires Claude Code CLI and is not available in Docker. The Docker version supports TTS-only mode through the web interface.
 
 ## About the TTS Models
 

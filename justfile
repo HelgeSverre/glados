@@ -9,6 +9,7 @@ setup: install download-models
 
 # Install Python dependencies with uv
 install:
+    uv venv
     uv pip install -r requirements.txt
 
 # Download and extract models from Google Drive
@@ -43,3 +44,23 @@ speak text:
 clean:
     rm -f output.wav glados-tts/output.wav
     rm -f web/audio/*.wav
+
+# Build Docker image
+docker-build:
+    docker compose build
+
+# Start Docker container
+docker-up:
+    docker compose up
+
+# Start Docker container in background
+docker-up-detached:
+    docker compose up -d
+
+# Stop Docker container
+docker-down:
+    docker compose down
+
+# View Docker logs
+docker-logs:
+    docker compose logs -f

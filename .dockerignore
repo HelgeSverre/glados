@@ -1,0 +1,31 @@
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+.venv
+venv
+
+# Models (downloaded during build)
+models/
+models.zip
+
+# Audio files
+web/audio/*.wav
+
+# IDE
+.idea
+.vscode
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Misc
+*.md
+LICENSE
+screenshot.png

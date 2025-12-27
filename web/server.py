@@ -159,8 +159,10 @@ app.router.add_get('/ws', websocket_handler)
 app.router.add_static('/audio', AUDIO_DIR)
 
 if __name__ == '__main__':
-    log.info("Starting GLaDOS Web Server on http://localhost:8765")
+    host = os.environ.get('GLADOS_HOST', 'localhost')
+    port = int(os.environ.get('GLADOS_PORT', '8765'))
+    log.info(f"Starting GLaDOS Web Server on http://{host}:{port}")
     try:
-        web.run_app(app, host='localhost', port=8765, print=None)
+        web.run_app(app, host=host, port=port, print=None)
     except KeyboardInterrupt:
         log.info("Server stopped by user")

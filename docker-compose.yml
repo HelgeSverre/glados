@@ -1,0 +1,11 @@
+services:
+  glados:
+    build: .
+    ports:
+      - "8765:8765"
+    environment:
+      - GLADOS_HOST=0.0.0.0
+      - GLADOS_PORT=8765
+    volumes:
+      # Persist generated audio files (optional)
+      - ./web/audio:/app/web/audio
