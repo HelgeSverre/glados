@@ -1,0 +1,13 @@
+services:
+  voice-generator:
+    build:
+      context: ..
+      dockerfile: voice-generator/Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./data:/app/voice-generator/data
+      - ./public/audio:/app/voice-generator/public/audio
+    environment:
+      - PORT=3000
+    restart: unless-stopped

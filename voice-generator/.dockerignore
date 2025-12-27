@@ -1,0 +1,30 @@
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__
+*.pyc
+*.pyo
+.venv
+venv
+
+# Node/Bun
+node_modules
+bun.lock
+
+# Generated data (recreated at runtime)
+data/*.db
+data/*.db-wal
+data/*.db-shm
+public/audio/*.wav
+
+# IDE and OS files
+.idea
+.vscode
+*.swp
+.DS_Store
+
+# Documentation
+*.md
+LICENSE
