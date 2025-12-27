@@ -25,6 +25,7 @@ This project is a modified fork of [R2D2FISH/glados-tts](https://github.com/R2D2
 - **[uv](https://github.com/astral-sh/uv)** - Fast Python package manager
 - **[just](https://github.com/casey/just)** - Command runner
 - **[Claude Code](https://github.com/anthropics/claude-code)** - Required for AI conversation mode (optional)
+- **[Bun](https://bun.sh/)** - Required for Voice Generator local setup (optional)
 - **[Docker](https://www.docker.com/)** - For containerized deployment (optional)
 
 ## Quick Start
@@ -59,6 +60,22 @@ Then open http://localhost:8765 in your browser.
 | `just docker-down` | Stop Docker container |
 | `just docker-logs` | View Docker logs |
 
+### Voice Generator Commands
+
+| Command | Description |
+|---------|-------------|
+| `just voice-setup` | Install Bun dependencies for voice generator |
+| `just voice-start` | Start both web server and TTS worker |
+| `just voice-serve` | Start voice generator web server only |
+| `just voice-worker` | Start TTS worker only |
+| `just voice-dev` | Start web server in development mode (hot reload) |
+| `just voice-clean` | Clean generated audio files and database |
+| `just voice-docker-build` | Build voice generator Docker image |
+| `just voice-docker-up` | Start voice generator Docker container |
+| `just voice-docker-up-detached` | Start voice generator container in background |
+| `just voice-docker-down` | Stop voice generator Docker container |
+| `just voice-docker-logs` | View voice generator Docker logs |
+
 ## Docker
 
 Run GLaDOS in a Docker container:
@@ -83,6 +100,54 @@ just docker-down  # stop
 ```
 
 **Note:** AI conversation mode requires Claude Code CLI and is not available in Docker. The Docker version supports TTS-only mode through the web interface.
+
+## Voice Generator
+
+The Voice Generator is a standalone web application for batch generating GLaDOS voice lines. It features an Aperture Science-themed UI where you can queue up text, and a background worker processes them into audio files.
+
+**Features:**
+- Web UI for submitting text to synthesize
+- Background TTS worker processes jobs from a queue
+- SQLite database for job tracking
+- Generated audio files can be played in-browser or downloaded
+- Fully containerized with Docker support
+
+### Local Setup
+
+Requires [Bun](https://bun.sh/) for the web server:
+
+```bash
+# Install dependencies
+just voice-setup
+
+# Start both web server and TTS worker
+just voice-start
+```
+
+Then open http://localhost:3000 in your browser.
+
+### Docker Setup
+
+Run the voice generator in a Docker container with no host dependencies:
+
+```bash
+# Build and start
+just voice-docker-build
+just voice-docker-up
+
+# Or with docker compose directly
+cd voice-generator && docker compose up --build
+```
+
+To run in background:
+
+```bash
+just voice-docker-up-detached
+just voice-docker-logs  # view logs
+just voice-docker-down  # stop
+```
+
+The Docker container includes both the Bun web server and Python TTS worker. Generated audio and the SQLite database are persisted via volume mounts.
 
 ## About the TTS Models
 
