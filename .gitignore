@@ -6,6 +6,9 @@ __pycache__/
 venv/
 .venv/
 
+# Node.js
+node_modules/
+
 # macOS
 .DS_Store
 
@@ -15,6 +18,11 @@ models.zip
 
 # Generated audio output
 *.wav
+
+# SQLite databases
+*.db
+*.db-shm
+*.db-wal
 
 # IDE
 .idea/
