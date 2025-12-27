@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Aperture Science Voice Synthesis</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>APERTURE SCIENCE</h1>
+      <p>Voice Synthesis Laboratory v1.0</p>
+      <hr>
+    </header>
+
+    <section>
+      <h2>> Input Terminal</h2>
+      <form action="/api/generate" method="POST">
+        <textarea
+          id="text"
+          name="text"
+          rows="3"
+          maxlength="2000"
+          placeholder="Enter text for vocal synthesis..."
+          required
+        ></textarea>
+        <div class="form-row">
+          <span id="char-count">0/2000</span>
+          <button type="submit">[ SYNTHESIZE ]</button>
+        </div>
+      </form>
+    </section>
+
+    <hr>
+
+    <section>
+      <h2>> Output Log</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Text</th>
+            <th>Status</th>
+            <th>Created</th>
+            <th>Duration</th>
+            <th>Audio</th>
+          </tr>
+        </thead>
+        <tbody id="entries-body">
+        </tbody>
+      </table>
+      <p id="empty-message" hidden>No entries. Submit text above to begin synthesis.</p>
+    </section>
+
+  </div>
+
+  <script>
+    const textarea = document.getElementById('text');
+    const charCount = document.getElementById('char-count');
+    textarea.addEventListener('input', () => {
+      charCount.textContent = `${textarea.value.length}/2000`;
+    });
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+
+    function formatDuration(ms) {
+      return ms ? (ms / 1000).toFixed(1) + 's' : '-';
+    }
+
+    function formatTime(iso) {
+      if (!iso) return '-';
+      const d = new Date(iso + 'Z');
+      const pad = n => String(n).padStart(2, '0');
+      return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+    }
+
+    function renderEntries(entries) {
+      const tbody = document.getElementById('entries-body');
+      const emptyMsg = document.getElementById('empty-message');
+
+      if (entries.length === 0) {
+        tbody.innerHTML = '';
+        emptyMsg.hidden = false;
+        return;
+      }
+
+      emptyMsg.hidden = true;
+      tbody.innerHTML = entries.map(e => `
+        <tr>
+          <td>${e.id}</td>
+          <td class="text-cell">${escapeHtml(e.text)}</td>
+          <td class="status-${e.status}">${e.status.toUpperCase()}</td>
+          <td>${formatTime(e.created_at)}</td>
+          <td>${formatDuration(e.duration_ms)}</td>
+          <td class="audio-cell">
+            ${e.status === 'success' && e.audio_path
+              ? `<button class="play-btn" data-src="/${e.audio_path}">play</button>
+                 <a href="/${e.audio_path}" download>download</a>`
+              : e.status === 'error'
+              ? `<span title="${escapeHtml(e.error_message || '')}">ERROR</span>`
+              : '...'}
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    async function loadEntries() {
+      try {
+        const res = await fetch('/api/entries');
+        const entries = await res.json();
+        renderEntries(entries);
+        if (entries.some(e => e.status === 'pending' || e.status === 'processing')) {
+          setTimeout(loadEntries, 2000);
+        }
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    loadEntries();
+
+    // Audio player
+    let currentAudio = null;
+    document.addEventListener('click', (e) => {
+      if (!e.target.classList.contains('play-btn')) return;
+      const btn = e.target;
+      const src = btn.dataset.src;
+
+      if (currentAudio && currentAudio.src.endsWith(src)) {
+        if (currentAudio.paused) {
+          currentAudio.play();
+          btn.textContent = 'stop';
+        } else {
+          currentAudio.pause();
+          currentAudio.currentTime = 0;
+          btn.textContent = 'play';
+        }
+      } else {
+        if (currentAudio) {
+          currentAudio.pause();
+          document.querySelectorAll('.play-btn').forEach(b => b.textContent = 'play');
+        }
+        currentAudio = new Audio(src);
+        currentAudio.play();
+        btn.textContent = 'stop';
+        currentAudio.onended = () => btn.textContent = 'play';
+      }
+    });
+  </script>
+</body>
+</html>

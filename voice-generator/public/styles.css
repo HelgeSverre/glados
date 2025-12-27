@@ -1,0 +1,160 @@
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "IBM Plex Mono", monospace;
+  font-size: 14px;
+  background: #000;
+  color: #f80;
+  padding: 20px;
+  line-height: 1.4;
+}
+
+.container {
+  margin: 0;
+}
+
+h1 {
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  margin-bottom: 2px;
+}
+
+header p {
+  color: #666;
+  font-size: 12px;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #333;
+  margin: 15px 0;
+}
+
+h2 {
+  font-size: 14px;
+  font-weight: normal;
+  color: #f80;
+  margin-bottom: 10px;
+}
+
+/* Form */
+form {
+  margin-bottom: 10px;
+}
+
+textarea {
+  width: 100%;
+  padding: 8px;
+  font-family: inherit;
+  font-size: 14px;
+  background: #111;
+  color: #fff;
+  border: 1px solid #333;
+  resize: vertical;
+}
+
+textarea:focus {
+  outline: none;
+  border-color: #f80;
+}
+
+textarea::placeholder {
+  color: #555;
+}
+
+.form-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 8px;
+}
+
+#char-count {
+  color: #555;
+  font-size: 12px;
+}
+
+button {
+  font-family: inherit;
+  font-size: 14px;
+  background: #000;
+  color: #f80;
+  border: 1px solid #f80;
+  padding: 6px 12px;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #f80;
+  color: #000;
+}
+
+/* Table */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+th, td {
+  padding: 6px 8px;
+  text-align: left;
+  border: 1px solid #333;
+}
+
+th {
+  background: #111;
+  color: #888;
+  font-weight: normal;
+  text-transform: uppercase;
+  font-size: 11px;
+}
+
+td {
+  background: #0a0a0a;
+  color: #ccc;
+  white-space: nowrap;
+}
+
+tbody tr:hover td {
+  background: #151515;
+}
+
+td.text-cell {
+  white-space: normal;
+}
+
+
+/* Status */
+.status-pending { color: #888; }
+.status-processing { color: #08f; }
+.status-success { color: #0c0; }
+.status-error { color: #f00; }
+
+.play-btn {
+  padding: 2px 8px;
+  font-size: 12px;
+}
+
+a {
+  color: #f80;
+  text-decoration: none;
+  margin-left: 8px;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+#empty-message {
+  color: #555;
+  padding: 20px;
+  text-align: center;
+}
