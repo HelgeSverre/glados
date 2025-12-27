@@ -130,3 +130,28 @@ voice-clean:
     rm -f voice-generator/data/glados-voice.db
     rm -f voice-generator/data/glados-voice.db-wal
     rm -f voice-generator/data/glados-voice.db-shm
+
+# Build voice generator Docker image
+[group('voice')]
+voice-docker-build:
+    cd voice-generator && docker compose build
+
+# Start voice generator Docker container
+[group('voice')]
+voice-docker-up:
+    cd voice-generator && docker compose up
+
+# Start voice generator Docker container in background
+[group('voice')]
+voice-docker-up-detached:
+    cd voice-generator && docker compose up -d
+
+# Stop voice generator Docker container
+[group('voice')]
+voice-docker-down:
+    cd voice-generator && docker compose down
+
+# View voice generator Docker logs
+[group('voice')]
+voice-docker-logs:
+    cd voice-generator && docker compose logs -f
