@@ -10,7 +10,7 @@ body {
   font-family: "IBM Plex Mono", monospace;
   font-size: 14px;
   background: #000;
-  color: #f80;
+  color: #ff9a00;
   padding: 20px;
   line-height: 1.4;
 }
@@ -33,14 +33,14 @@ header p {
 
 hr {
   border: none;
-  border-top: 1px solid #333;
+  border-top: 1px solid #2a2a2a;
   margin: 15px 0;
 }
 
 h2 {
   font-size: 14px;
   font-weight: normal;
-  color: #f80;
+  color: #ff9a00;
   margin-bottom: 10px;
 }
 
@@ -54,15 +54,15 @@ textarea {
   padding: 8px;
   font-family: inherit;
   font-size: 14px;
-  background: #111;
-  color: #fff;
-  border: 1px solid #333;
+  background: #0d0d0d;
+  color: #e0e0e0;
+  border: 1px solid #2a2a2a;
   resize: vertical;
 }
 
 textarea:focus {
   outline: none;
-  border-color: #f80;
+  border-color: #ff9a00;
 }
 
 textarea::placeholder {
@@ -85,14 +85,14 @@ button {
   font-family: inherit;
   font-size: 14px;
   background: #000;
-  color: #f80;
-  border: 1px solid #f80;
+  color: #ff9a00;
+  border: 1px solid #ff9a00;
   padding: 6px 12px;
   cursor: pointer;
 }
 
 button:hover {
-  background: #f80;
+  background: #ff9a00;
   color: #000;
 }
 
@@ -106,37 +106,36 @@ table {
 th, td {
   padding: 6px 8px;
   text-align: left;
-  border: 1px solid #333;
+  border: 1px solid #2a2a2a;
 }
 
 th {
-  background: #111;
-  color: #888;
+  background: #0d0d0d;
+  color: #777;
   font-weight: normal;
   text-transform: uppercase;
   font-size: 11px;
 }
 
 td {
-  background: #0a0a0a;
-  color: #ccc;
+  background: #080808;
+  color: #bbb;
   white-space: nowrap;
 }
 
 tbody tr:hover td {
-  background: #151515;
+  background: #121212;
 }
 
 td.text-cell {
   white-space: normal;
 }
 
-
 /* Status */
-.status-pending { color: #888; }
-.status-processing { color: #08f; }
-.status-success { color: #0c0; }
-.status-error { color: #f00; }
+.status-pending { color: #666; }
+.status-processing { color: #27a7d8; }
+.status-success { color: #5a5; }
+.status-error { color: #c55; }
 
 .play-btn {
   padding: 2px 8px;
@@ -144,7 +143,7 @@ td.text-cell {
 }
 
 a {
-  color: #f80;
+  color: #27a7d8;
   text-decoration: none;
   margin-left: 8px;
 }
