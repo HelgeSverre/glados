@@ -9,6 +9,7 @@ import wave
 import subprocess
 import random
 import json
+import datetime
 
 # Suppress PyTorch nested tensor warning from pre-compiled models
 warnings.filterwarnings("ignore", message="enable_nested_tensor is True")
@@ -29,7 +30,15 @@ from scipy.io.wavfile import write
 
 # Constants
 OUTPUT_PATH = '/Users/helge/code/glados/glados-tts/output.wav'
+LOG_PATH = '/Users/helge/code/glados/glados-tts.log'
 GLADOS_SYSTEM_PROMPT = "You are GLaDOS from Portal. Respond in character: sardonic, passive-aggressive, darkly humorous. Keep responses brief (1-3 sentences). Never break character."
+
+
+def log_tts(text):
+    """Log TTS text to glados-tts.log with timestamp."""
+    timestamp = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    with open(LOG_PATH, 'a', encoding='utf-8') as f:
+        f.write(f"[{timestamp}] {text}\n")
 
 SPINNER_MESSAGES = {
     'thinking': [
@@ -150,6 +159,7 @@ def generate_audio_with_spinner(text, output_path):
 
     audio = generate_tts(text)
     write(output_path, 22050, audio)
+    log_tts(text)
 
     stop_spinner.set()
     spin_thread.join()
@@ -199,6 +209,7 @@ def say_mode(text, play_audio=True):
 
     audio = generate_tts(text)
     write(OUTPUT_PATH, 22050, audio)
+    log_tts(text)
     print(f"Audio saved to {OUTPUT_PATH}")
 
     if play_audio:

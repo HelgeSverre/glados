@@ -76,6 +76,13 @@ Then open http://localhost:8765 in your browser.
 | `just voice-docker-down` | Stop voice generator Docker container |
 | `just voice-docker-logs` | View voice generator Docker logs |
 
+### Visualizer Commands
+
+| Command | Description |
+|---------|-------------|
+| `just viz` | Run aperture eye visualizer (watches for new audio) |
+| `just viz-file <file>` | Run aperture eye visualizer with specific audio file |
+
 ## Docker
 
 Run GLaDOS in a Docker container:
@@ -148,6 +155,17 @@ just voice-docker-down  # stop
 ```
 
 The Docker container includes both the Bun web server and Python TTS worker. Generated audio and the SQLite database are persisted via volume mounts.
+
+## Visualizer
+
+An audio-reactive aperture eye visualizer that responds to GLaDOS's voice. The iris contracts and expands based on audio amplitude, creating an immersive visual experience.
+
+[![GLaDOS Visualizer](https://brief.cleanshot.cloud/media/70425/XCD8HQEyghyt6SrM0AFoNdksept19Z0nyEsnTKlv.mp4?anchor=center)](https://share.helgesver.re/80Zks65G)
+
+**Keyboard Controls:**
+- `SPACE` - Replay audio
+- `ESC` - Quit
+- Drag-and-drop WAV files onto the window to play them
 
 ## About the TTS Models
 

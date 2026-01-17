@@ -348,22 +348,4 @@ viz:
 viz-file file:
     uv run python visualizer/aperture_eye.py "{{file}}"
 
-# Run audio-reactive orb visualizer
-[group('visualizer')]
-viz-orb:
-    uv run python visualizer/audio_orb.py
-
-# Say something and show visualizer (visualizer handles playback)
-[group('visualizer')]
-say-viz text:
-    #!/usr/bin/env bash
-    set -euo pipefail
-    # Start visualizer in background
-    uv run python visualizer/aperture_eye.py &
-    VIZ_PID=$!
-    sleep 1
-    # Generate audio without playing (visualizer will play it)
-    uv run python glados.py --no-play "{{text}}"
-    sleep 3
-    kill $VIZ_PID 2>/dev/null || true
 
