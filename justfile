@@ -366,3 +366,4 @@ say-viz text:
     uv run python glados.py --no-play "{{text}}"
     sleep 3
     kill $VIZ_PID 2>/dev/null || true
+
