@@ -190,7 +190,7 @@ def speak_mode(text):
     generate_audio_with_spinner(response, OUTPUT_PATH)
     play_and_type(OUTPUT_PATH, response)
 
-def say_mode(text):
+def say_mode(text, play_audio=True):
     """Direct TTS mode - just speak the provided text."""
     print("Initializing GLaDOS TTS Engine...")
     models = get_models()
@@ -201,13 +201,14 @@ def say_mode(text):
     write(OUTPUT_PATH, 22050, audio)
     print(f"Audio saved to {OUTPUT_PATH}")
 
-    # Play with afplay on macOS
-    subprocess.run(['afplay', OUTPUT_PATH])
+    if play_audio:
+        subprocess.run(['afplay', OUTPUT_PATH])
 
 def main():
     parser = argparse.ArgumentParser(description='GLaDOS TTS Engine')
     parser.add_argument('text', nargs='?', default=None, help='Text to speak')
     parser.add_argument('--ai', action='store_true', help='AI conversation mode with Claude')
+    parser.add_argument('--no-play', action='store_true', help='Generate audio without playing')
     args = parser.parse_args()
 
     # Handle text input: prefer args, then stdin, then default
@@ -221,7 +222,7 @@ def main():
     if args.ai:
         speak_mode(text)
     else:
-        say_mode(text)
+        say_mode(text, play_audio=not args.no_play)
 
 if __name__ == '__main__':
     main()
